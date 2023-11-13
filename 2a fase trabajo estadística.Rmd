@@ -1,0 +1,863 @@
+---
+title: "NBA 2015"
+author: "Maribel Crespí valero y Carlos Bosh Pino"
+date: "4/25/2020"
+output:
+  pdf_document: 
+    number_sections: yes
+    toc: yes
+  html_document: 
+    number_sections: yes
+    toc: yes
+---
+
+<div class = "aligncenter">
+![](logoNBA.png)
+</div>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,echo=FALSE,include=FALSE}
+library(tidyverse)
+```
+
+
+# Introducción:
+
+En baloncesto abundan estadísticas de todo tipo, así que hemos pensado que era un tema bastante idóneo a tratar en este trabajo. La elección de la NBA es debido a que es la liga más atractiva a la hora de sacar datos, ya que en ésta es donde juegan los mejores jugadores de todo el mundo y por lo tanto es un foco de talento inmenso. Un ejemplo de la inmensa cantidad de estadísticas son actuaciones históricas donde jugadores han llegado a marcar 100 puntos, dar 30 asistencias o coger 42 rebotes. De jugadores que promedian triples-dobles por temporada o incluso aquellos que han conseguido llegar al cuadruple-doble en algún partido.
+
+**NOTA**: Un triple-doble es conseguir doble dígito en al menos tres de los datos estadísticos cuantificables tradicionales. Estos son los puntos, los rebotes, las asistencias, los robos y los tapones.
+Un cuadruple-doble es lo mismo pero en cuatro datos estadísticos.
+
+Nosotros nos vamos a encargar de estudiar todas estas estadísticas, ver que cómo se relacionan unas con otras y sacar las conclusiones pertinentes. Investigaremos qué es lo que hace a un equipo el dueño de su conferencia, comparar a los mejores jugadores para ver quién es realmente eficiente para su equipo, ver la evolución de la liga y de los equipos, entre otras muchas cosas. 
+
+
+
+ Hemos escogido 449 jugadores con un total de 34 variables ("Nombre","Partidos jugados","Minutos","Puntos",
+                  "Canastas_anotadas","Canastas intentadas",
+                  "Porcentaje canastas","3P anotados",
+                  "3P intentados","Porcentaje triples",
+                  "Tiros libres anotados","Tiros libres intentados",
+                  "Porcentaje tiros libres ","Rebotes ofensivos",
+                  "Rebotes defensivos","Rebotes",
+                  "Asistencias","Robos","Tapones","Perdidas","Faltas en ataque",
+                  "Faltas en defensa","Asistencias/Perdida","Robo/Pérdida",
+                  "Edad","Nacimiento","Fecha de nacimiento","Instituto",
+                  "Experiencia","Peso","Posición","Equipo","Altura","BMI").
+
+Los objetivos del proyecto y los apartados que se tratan son:
+
+1. Estadísticos Descriptivos básicos globales.
+2. Estadísticos Descriptivos básicos por agrupaciones.
+3. Análisis multidimensional: Relación entre las variables.
+4. Presentación gráfica de los resultados Anteriores.
+5. Conclusiones: Interpretaciones básicas del análisis exploratorio.
+
+
+EL link con los datos es: [NBA 2015](https://www.kaggle.com/drgilermo/nba-players-stats-20142015)
+
+## Carga de datos
+
+```{r}
+  data=read.csv("players_stats.csv.xls",header=TRUE)
+
+
+colnames(data)<-c("Nombre","Partidos jugados","Minutos","Puntos",
+                  "Canastas anotadas","Canastas intentadas",
+                  "Porcentaje canastas","3P anotados",
+                  "3P intentados","Porcentaje triples",
+                  "Tiros libres anotados","Tiros libres intentados",
+                  "Porcentaje tiros libres ","Rebotes ofensivos",
+                  "Rebotes defensivos","Rebotes",
+                  "Asistencias","Robos","Tapones","Perdidas","Faltas en ataque",
+                  "Faltas en defensa","Asistencias/Perdida","Robo/Pérdida",
+                  "Edad","Nacimiento","Fecha de nacimiento","Instituto",
+                  "Experiencia","Peso","Posición","Equipo","Altura","BMI")
+str(data)
+head(data)
+
+```
+
+# Estadísticos Descriptivos básicos globales: Medias, Medianas, Desviaciones típicas y Varianzas
+
+En este apartado, calculamos las estadísticas globales de todos los jugadores.
+
+## Medias y medianas:
+
+
+Media, Mediana y maximos y minimos de minutos jugados:
+
+```{r}
+summary(data$Minutos)
+```
+
+Media, Mediana y maximos y minimos de puntos:
+
+```{r}
+summary(data$Puntos)
+```
+
+Media, Mediana y maximos y minimos de canastas anotadas:
+
+```{r}
+summary(data$`Canastas anotadas`)
+```
+
+Media, Mediana y maximos y minimos de canastas intentadas:
+
+```{r}
+summary(data$`Canastas intentadas`)
+```
+
+Media, Mediana y maximos y minimos de los porcentajes de anotación:
+
+```{r}
+summary(data$`Porcentaje canastas`)
+```
+
+Media, Mediana y maximos y minimos de triples anotados:
+
+```{r}
+summary(data$`3P anotados`)
+```
+
+Media, Mediana y maximos y minimos de  triples intentados:
+
+```{r}
+summary(data$`3P intentados`)
+```
+
+Media, Mediana y maximos y minimos de porcentajes de triple:
+
+```{r}
+summary(data$`Porcentaje triples`)
+```
+
+Media, Mediana y maximos y minimos de tiros libres anotados:
+
+```{r}
+summary(data$`Tiros libres anotados`)
+```
+
+Media, Mediana y maximos y minimos de tiros libres intentados:
+
+```{r}
+summary(data$`Tiros libres intentados`)
+```
+
+Media, Mediana y maximos y minimos del porcentaje de acierto de tiros libres:
+
+```{r}
+summary(data$`Porcentaje tiros libres`)
+```
+
+Media, Mediana y maximos y minimos de rebotes ofensivos:
+
+```{r}
+summary(data$`Rebotes ofensivos`)
+```
+
+Media, Mediana y maximos y minimos de rebotes defensivos:
+
+```{r}
+summary(data$`Rebotes ofensivos`)
+```
+
+Media, Mediana y maximos y minimos de rebotes en general:
+
+```{r}
+summary(data$Rebotes)
+```
+
+Media, Mediana y maximos y minimos de asistencias:
+
+```{r}
+summary(data$Asistencias)
+```
+
+Media, Mediana y maximos y minimos de robos de balón:
+
+```{r}
+summary(data$Robos)
+```
+
+Media, Mediana y maximos y minimos de tapones:
+
+```{r}
+summary(data$Tapones)
+```
+
+Media, Mediana y maximos y minimos de pérdidas de balón:
+
+```{r}
+summary(data$`Perdidas`)
+```
+
+Media, Mediana y maximos y minimos de faltas en ataque:
+
+```{r}
+summary(data$`Faltas en ataque`)
+```
+
+Media, Mediana y maximos y minimos de faltas en defensa:
+
+```{r}
+summary(data$`Faltas en defensa`)
+```
+
+
+Media, Mediana y maximos y minimos de la edad de los jugadores:
+
+```{r}
+summary(data$Edad)
+```
+
+
+
+
+
+## Desviaciones típicas:
+
+Desviación típica de minutos jugados:
+
+```{r}
+sd(data$Minutos)
+```
+
+Desviación típica de puntos:
+
+```{r}
+sd(data$Puntos)
+```
+
+Desviación típica de canastas anotadas:
+
+```{r}
+sd(data$`Canastas anotadas`)
+```
+
+Desviación típica de canastas intentadas:
+
+```{r}
+sd(data$`Canastas intentadas`)
+```
+
+Desviación típica de los porcentajes de anotación:
+
+```{r}
+sd(data$`Porcentaje canastas`)
+```
+
+Desviación típica de triples anotados:
+
+```{r}
+sd(data$`3P anotados`)
+```
+
+Desviación típica de  triples intentados:
+
+```{r}
+sd(data$`3P intentados`)
+```
+
+Desviación típica de porcentajes de triple:
+
+```{r}
+sd(data$`Porcentaje triples`)
+```
+
+Desviación típica de tiros libres anotados:
+
+```{r}
+sd(data$`Tiros libres anotados`)
+```
+
+Desviación típica de tiros libres intentados:
+
+```{r}
+sd(data$`Tiros libres intentados`)
+```
+
+Desviación típica del porcentaje de acierto de tiros libres:
+
+```{r}
+sd(data$`Porcentaje tiros libres`)
+```
+
+Desviación típica de rebotes ofensivos:
+
+```{r}
+sd(data$`Rebotes ofensivos`)
+```
+
+Desviación típica de rebotes defensivos:
+
+```{r}
+sd(data$`Rebotes ofensivos`)
+```
+
+Desviación típica de rebotes en general:
+
+```{r}
+sd(data$Rebotes)
+```
+
+Desviación típica de asistencias:
+
+```{r}
+sd(data$Asistencias)
+```
+
+Desviación típica de robos de balón:
+
+```{r}
+sd(data$Robos)
+```
+
+Desviación típica de tapones:
+
+```{r}
+sd(data$Tapones)
+```
+
+Desviación típica de pérdidas de balón:
+
+```{r}
+sd(data$`Perdidas`)
+```
+
+Desviación típica de faltas en ataque:
+
+```{r}
+sd(data$`Faltas en ataque`)
+```
+
+Desviación típica de faltas en defensa:
+
+```{r}
+sd(data$`Faltas en defensa`)
+```
+
+
+
+
+## Varianzas:
+
+Varianza de minutos jugados:
+
+```{r}
+var(data$Minutos)
+```
+
+Varianza de puntos:
+
+```{r}
+var(data$Puntos)
+```
+
+Varianza de canastas anotadas:
+
+```{r}
+var(data$`Canastas anotadas`)
+```
+
+Varianza de canastas intentadas:
+
+```{r}
+var(data$`Canastas intentadas`)
+```
+
+Varianza de los porcentajes de anotación:
+
+```{r}
+var(data$`Porcentaje canastas`)
+```
+
+Varianza de triples anotados:
+
+```{r}
+var(data$`3P anotados`)
+```
+
+Varianza de  triples intentados:
+
+```{r}
+var(data$`3P intentados`)
+```
+
+Varianza de porcentajes de triple:
+
+```{r}
+var(data$`Porcentaje triples`)
+```
+
+Varianza de tiros libres anotados:
+
+```{r}
+var(data$`Tiros libres anotados`)
+```
+
+Varianza de tiros libres intentados:
+
+```{r}
+var(data$`Tiros libres intentados`)
+```
+
+Varianza del porcentaje de acierto de tiros libres:
+
+```{r}
+var(data$`Porcentaje tiros libres`)
+```
+
+Varianza de rebotes ofensivos:
+
+```{r}
+var(data$`Rebotes ofensivos`)
+```
+
+Varianza de rebotes defensivos:
+
+```{r}
+var(data$`Rebotes ofensivos`)
+```
+
+Varianza de rebotes en general:
+
+```{r}
+var(data$Rebotes)
+```
+
+Varianza de asistencias:
+
+```{r}
+var(data$Asistencias)
+```
+
+Varianza de robos de balón:
+
+```{r}
+var(data$Robos)
+```
+
+Varianza de tapones:
+
+```{r}
+var(data$Tapones)
+```
+
+Varianza de pérdidas de balón:
+
+```{r}
+var(data$`Perdidas`)
+```
+
+Varianza de faltas en ataque:
+
+```{r}
+var(data$`Faltas en ataque`)
+```
+
+Varianza de faltas en defensa:
+
+```{r}
+var(data$`Faltas en defensa`)
+```
+
+
+
+# Estadísticas descriptivas básicas por agrupaciones:
+
+Hemos decidido escoger los cuatro mejores equipos de la liga. Los dos mejores de la conferencia Oeste( Golden State Warriors y Houston Rockets) y los dos mejores de la conferencia Este(Atlanta Hawks y Cleveland Cavaliers).
+
+
+```{r}
+Mejores_equipos=c("GSW","CLE","HOU","ATL")
+data2=data[as.character(data$Equipo)%in% Mejores_equipos,c("Equipo","Puntos",
+                                                           "Asistencias","Rebotes")]
+data2=na.omit(data2)
+summary(data2$Puntos)
+sd(data2$`Asistencias`)
+var(data2$Rebotes)
+```
+
+
+## Representaciones gráficas:
+
+```{r}
+barplot(sort(table(data$Equipo)),las=2,cex.names = 0.5,col="chartreuse3",
+        main="Número de jugadores de cada equipo",xlab="Equipos",ylab="Jugadores")
+```
+
+En el gráfico podemos ver como en general el número de jugadores por equipo está bastante balanceado. 
+Algunos equipos optan por una plantilla más corta pero con jugadores estrella con salarios más elevados. Otros equipos optan por más jugadores de nivel medio pero de salarios más reducidos.
+En general los equipos con las super estrellas mejor pagadas, son con los que menor plantel cuentan. Un ejemplo podría ser Cleveland Cavaliers, cuyo plantel cuenta con LeBron James y Kyrie Irving, dos jugadores de contrato máximo. Por lo tanto dejan poco espacio salarial para los otros jugadores.
+
+**NOTA**: Todos los equipos de la NBA tienen un límite salarial. 
+
+
+```{r}
+hist(data$`Asistencias`,main = "Frecuencia absoluta de asistencias",
+     xlab = "Cantidad de asistencias", ylab = "Jugadores",col="brown1")
+```
+
+Cantidad de asistencias por jugador.
+
+
+```{r}
+
+
+Jugadores_top=c("James Harden","LeBron James","Stephen Curry","Kevin Durant",
+                "Kemba Walker","Kyrie Irving","Kawhi Leonard","Paul George",
+                "Chris Paul")
+data3=data[as.character(data$Nombre)%in% Jugadores_top,23:24]
+data3=na.omit(data3)
+plot(data3,col=c("violetred","violetred4","wheat3","wheat4",
+                 "yellow3","yellow4","tan1","tan2","violet"),
+     main="Gráfico Multidimensional",xlab="Asistencias/Pérdida",
+     pch=19,xlim=c(0,4.5),ylim=c(0,1.6))
+text(data3,labels=c("Harden","LeBron James","Curry","Kevin Durant",
+                    "Kemba Walker","Kyrie Irving","Kawhi Leonard",
+                    "Paul George","Chris Paul"),pos=c(rep(3,times=9)))
+
+```
+
+Robos/Pérdidas y Asistencias/Pérdida de los mejores jugadores de la liga. Como vemos, Harden es el jugador con más asistencias por pérdidas, lo que quiere decir que es un jugador bastante eficiente en este aspecto.
+Por el lado de los robos, el jugador que sobresale por encima de los demás es Stephen Curry.  
+
+
+
+
+## Altura relacionada con otros datos:
+
+```{r}
+
+mis.colores.2 <- colorRampPalette(c("#ffccff", "#ccffcc", "#ffccff"))
+barplot(table(data$`Rebotes ofensivos`), main = "Frecuencia de rebotes por jugador",
+        xlab = "Jugadores", ylab = "Rebotes", col = mis.colores.2(54),xlim=c(0,60),ylim=c(0,20))
+
+boxplot(data$Rebotes~data$Altura,col="lightpink", las=2, cex.label=2,xlab="Altura",
+        ylab="Rebotes",main="Rebotes por altura")
+```
+
+Este gráfico nos muestra la cantidad de rebotes totales que cogen los jugadores en relación a su altura. Como era de esperar, los jugadores más altos por lo general, son los que más rebotes capturan.
+
+```{r}
+plot(data$`Tiros libres intentados`~data$Altura,
+     xlab= "Altura", ylab="Tiros libres tirados",
+     col="violetred2",main="Relación tiros libres con altura",
+     pch=19)
+```
+
+De este gráfico sacamos la conclusión de que los jugadores más altos, como juegan cerca del aro, son los que suelen conseguir sacar más faltas  y por lo tanto ir a la línea de tiros libres más frecuentemente. 
+
+```{r}
+plot(data$`3P anotados`~data$Altura,xlab= "Altura",
+     ylab="Triples anotados",col="springgreen3",
+     main="Relación triples anotados con la altura",pch=19)
+```
+
+Podemos comprobar como los mejores triplistas son jugadores de estatura "media" en la nba. De hecho, tiene bastante sentido, ya que cuando pensamos en jugadores de mayor estatura, los relacionamos inevitablemente cerca de la canasta, posteando o reboteando. Sería un "desperdicio" posicionarlos lejos de donde supuestamente tienen una ventaja. En cambio, los jugadores de menor estatura, suelen ser los que están más lejos del aro y por lo tanto es normal que estos sean los que más se atrevan desde el perímetro.
+Además, los jugadores bajitos también suelen ser mejores en el triple ya que tienen el centro de gravedad más bajo y pueden efectuar una buena mecánica de tiro de forma mucho más rápida.
+
+
+```{r}
+plot(data$Minutos~data$Altura,xlab= "Altura", ylab="Minutos jugados",
+     col="steelblue3",main="Relación de minutos en cancha con la altura",
+     pch=19)
+```
+
+Cabría esperar que los jugadores más altos son los que más juegan en baloncesto, pero este gráfico nos desmiente ese mito. A pesar de que la altura en la NBA es importante; no es imprescindible. Como podemos observar, los minutos están bastante repartidos entre jugadores de todos los tamaños. De jugadores bajitos jugando casi 3000 minutos, a jugadores enormes jugando no más de 1000, y viceversa. El talento también influye mucho.
+
+
+
+
+```{r}
+NBA_CURRY=data %>% filter(Equipo=="GSW",Nombre=="Stephen Curry") %>% summarise(
+                                                        Nombre="Stephen Curry",
+                                                        Triples=max(`3P anotados`),
+                                                        Asistencias=max(Asistencias),
+                                                        Robos=max(Robos),
+                                                        Tapones=max(Tapones)) 
+knitr::kable(NBA_CURRY)
+NBA_LILLARD=data %>% filter(Equipo=="POR",Nombre=="Damian Lillard") %>% summarise(
+                                                        Nombre="Damian Lillard",
+                                                        Triples=max(`3P anotados`),
+                                                        Asistencias=max(Asistencias),
+                                                        Robos=max(Robos),
+                                                        Tapones=max(Tapones)) 
+
+knitr::kable(NBA_LILLARD)
+
+```
+
+Datos de jugadores concretos. En este caso he seleccionado a Stephen Curry y Damian Lillard porque son dos de los bases más destacados de la liga.
+
+```{r}
+Instituto= table(data$Instituto)
+head(Instituto)
+max(Instituto)
+```
+
+
+
+```{r}
+barplot(sort(Instituto,decreasing=TRUE),
+        las=2,cex.names = 0.8,main="Cantidad de jugadores por instituto 
+        que han llegado a la NBA",
+        xlab="", col="aquamarine2",ylim=c(0,200),xlim=c(0,30))
+```
+
+Como podemos ver, en general los jugadores que llegaron a la NBA se han distribuido a lo largo de todas las universidades de los 50 estados. Sin embargo, algunas universidades tienen más caché que otras, son vistas con mejores ojos por los jugadores y los analistas, por lo que generalmente los mejores prospectos se marchan a las mejores universidades.
+
+Se puede ver como una sobresale por encima de todas, pero en este caso son los jugadores que no han asistido a la universidad, ya sea porque han llegado del instituto a la NBA directamente, o por que estuvieron jugando en otras ligas.
+
+De las universidades más escogidas encontramos Duke University. Esto no es de estrañar ya que es de las más prestigiosas. Aquí han nacido grandes jugadores como Kyrie Irving, Zion Williamson o Jayson Tatum, entre otros.
+
+
+
+
+```{r}
+NBA_resumen_season= data %>% group_by(Equipo) %>% summarise(N=n(),
+                                                       Mean_pts=mean(Puntos),
+                                                       Sd_pts=sd(Puntos),
+                                                       Max_pts=max(Puntos),
+                                                       Min_pts=min(Puntos)) 
+NBA_resumen_season
+knitr::kable(NBA_resumen_season)
+```
+
+
+```{r}
+boxplot(data$Puntos~data$Equipo,las=2,col="palegreen",xlab="Equipos NBA",
+        ylab="Puntos anotados de sus jugadores")
+```
+
+Este gráfico nos muestra la cantidad de puntos totales que ha encestado en todo su conjunto los equipos de la NBA de esta temporada. Mirando la imagen, se puede observar que los equipos más anotadores son los Memphis Grizzlies, seguido de Los Ángeles Clippers, y finalmente la medalla de bronce es para los Phoenix Suns. Todos pertenecientes a la conferencia Oeste. Pero si miramos sus clasificaciones en liga, los Grizzlies quedaron quintos, los Clippers terceros y los Suns décimos. Podemos deducir que a pesar de que tuviesen un muy buen ataque, no eran equipos tan balanceados en defensa.
+
+En la otra cara de la moneda, vemos a los equipos menos anotadores, los New York knicks, Miami Heat y Philadelphia 76ers. De hecho, si miramos sus clasificaciones(todos de la conferencia Este),quedaron últimos, décimos y penúltimos respectivamente. Podemos entender que sus bajas anotaciones se han visto reflejadas en una temporada bastante pobre.
+
+Como conclusión final, la anotación en la NBA es muy importante, ya que los equipos con bajo porcentaje de anotación se han visto mermados por este aspecto hasta el punto de caer al fondo de la clasificación. Sin embargo, si un equipo NBA quiere aspirar a lo más alto, deberá tener en cuenta tanto ataque como defensa, ya que sin este último se quedarán en un buen equipo y nada más.
+
+
+```{r}
+plot(data[,4:6],col="deeppink3")
+```
+
+
+
+
+```{r}
+
+boxplot(data$Puntos~data$Edad,xlab="Edad jugadores",
+        ylab="Puntos",col="darkgoldenrod1")
+```
+
+
+En este histograma se muestran la cantidad de puntos metidos en esta temporada en relación a la edad.
+Podemos observar que los jugadores que más anotan son en general los que oscilan entre 25 y 31 años. Esto también es lógico puesto que son las edades de madurez donde el cuerpo humano alcanza las mayores capadidades
+físicas. Los jovenes por lo general anotan menos por la inexperiencia. Los más veteranos anotan menos por el 
+desgaste físico de los años.
+
+```{r}
+plot(data$`Porcentaje canastas`~data$Minutos,xlab= "Minutos jugados",
+     ylab="Porcentaje de canastas anotadas",col="sienna1",
+     main="Relación de las canastas anotadas con los minutos jugados",
+     pch=19)
+```
+
+
+Podemos observar como la muestra se distribuye de forma bastante uniforme a lo largo del gráfico. Esto quiere decir que en general los porcentajes, tanto de jugadores con un rol de suplente, como de los que son titulares indiscutibles, son bastante similares.
+
+Lo que uno podría pensar es que los jugadores que juegan más
+minutos, deberían tener los porcentajes más elevados, puesto que son los más talentosos y sin embargo no es así. Esto se debe a que los jugadores que juegan más, generalmente asumen más responsabilidades y por tanto tiran más. En cambio, los jugadores cuya función es más de rol, suelen seleccionar pocos tiros, pero que suelan ser más efectivos ya que buscan la máxima eficiencia para lograr entrar en el quinteto titular.
+Además, como pequeño apunte, muchos de las estrellas de la nba buscan inflar estadísticas, así que no es de extrañar que tiren de forma desmedida solo para su beneficio propio. Por lo que aunque la situación de tiro no sea la idónea(por lo tanto las posibilidades de anotar sean menores), lo asuman igual.
+
+# Aplicaciones de estadística de inferencia a los datos
+
+## Bondad de ajuste con X^2 de Pearson
+
+```{r}
+FreEquipo=table(data$Equipo)
+chisq.test(FreEquipo)
+x=data$Robos
+ks.test(x,"pnorm",3,1)
+```
+
+## Anova 1
+
+ A continuación vamos a realizar un análisis de la varianza( *ANOVA*) para comparar entre las siguientes hipótesis:
+ 
+
+ 
+$$
+\left\{\begin{array}{ll} 
+H_{0}:\ Media \ Equipo\ 1  = \ Media \ Equipo\ 2\\ 
+H_{1}:\ Media \ Equipo\ 1 \not=  \ Media \ Equipo\ 2
+\end{array}
+\right.
+$$
+
+Primero, se puede ver un boxplot, donde se pueden apreciar qué variables hemos escogido para realizar el *ANOVA*.
+
+```{r}
+boxplot(data$`3P anotados`~data$Equipo,col=heat.colors(32),las=2)
+```
+
+Este gráfico muestra los triples anotados por los equipos estudiados. Como vemos, el equipo con más cantidad de triples anotados son Los Ángeles Clippers. El equipo que más triples ha anotado en un partido son los Golden State Warriors, ya que en el gráfico aparecen dos valores atípicos asignados a ellos; valores bastante superiores a los de sus rivales. De hecho esto se puede justificar ya que Golden State cuentan en su plantilla con los *"Splash Brothers"* ( Stephen Curry y Klay Thompson ), considerados de los mejores triplistas de la historia.
+
+A continuación realizamos el anova comparando los triples anotados por equipo.
+
+```{r}
+data=na.omit(data)
+sol_anova=aov(data$`3P anotados`~data$Equipo)
+summary(sol_anova)
+```
+
+Comprobamos que el p-valor es muy grande. Concluimos, por tanto, que no tenemos evidencias suficientes para rechazar la hipótesis nula, y por lo tanto la media de los equipos sí que es distinta.
+
+
+
+## Test KS
+ 
+ A continuación vamos a realizar el test de Kolmogorov-Smirnov que utilizaremos para verificar si nuestro conjunto de datos se adapta a una distribución normal o no. Por consiguiente nuestro contraste será:
+ 
+$$
+\left\{\begin{array}{ll} 
+H_{0}:\ Los \ datos\ proceden\ de\ una\ distribución\ normal \\ 
+H_{1}:\ Los \ datos\ no\ proceden\ de\ una\ distribución\ normal 
+\end{array}
+\right.
+$$
+ 
+Para la realización de este apartado hemos cogido 4 equipos y hemos realizado 4 test ks, uno para cada muestra. La elección del número de equipos es simplemente por comodidad y porque hemos pensado que con esta cantidad ya sería suficiente para llegar a conclusiones más generales.
+Los equipos seleccionados son los que se encuentran en la parte alta de la clasificación.
+
+
+```{r}
+Mejores_equipos=c("GSW","CLE","HOU","ATL")
+data4=data[as.character(data$Equipo)%in% Mejores_equipos,c("Equipo","Puntos",
+                                                           "Asistencias","Rebotes")]
+data4=na.omit(data4)
+data4
+X=data4$Puntos
+F=as.factor(as.character(data4$Equipo))
+levels(F)
+
+muestra1=X[F=="GSW"]
+ks.test(muestra1,"pnorm",mean(muestra1),sd(muestra1))
+muestra2=X[F=="CLE"]
+ks.test(muestra2,"pnorm",mean(muestra2),sd(muestra2))
+muestra3=X[F=="HOU"]
+ks.test(muestra3,"pnorm",mean(muestra3),sd(muestra3))
+muestra4=X[F=="ATL"]
+ks.test(muestra4,"pnorm",mean(muestra4),sd(muestra4))
+
+```
+
+Hemos decidido crear una tabla más pequeña solo con los datos que nos interesan y con los equipos seleccionados. Y previamente hemos realizado los test KS. Como vemos, el p-valor de todos los test es bastante alto, por lo que no podemos rechazar la hipótesis nula, por lo que concluimos que los datos proceden de una distribución normal.
+
+A continuación realizamos el histograma de puntos de los Golden State Warriors:
+
+```{r}
+hist(muestra1,freq =FALSE,main="Histograma de canastas",xlab="Golden State Warriors",
+     col="thistle1")
+lines(density(muestra1),col="darkviolet")
+curve(dnorm(x,mean(muestra1),sd(muestra1)),add=TRUE,col="cyan")
+legend("topright",c("Densidad muestral","Densidad normal"),fill=c("darkviolet","cyan"))
+```
+
+En el gráfico podemos ver la comparación entre la densidad muestral y la normal. Vemos como la empírica oscila de forma más bruca que la normal.
+
+## Boxplot de Puntos por equipo
+
+```{r}
+F2=F
+levels(F2)=paste0(c("Warriors","Cavaliers","Houston Rockets","Atlanta Hawks"))
+boxplot(X~F2,main="Boxplot de puntos por equipo",col="darkseagreen1")
+
+```
+
+En este boxplot vemos las comparaciones entre los mejores equipos de la liga. 
+
+
+## Segunda ANOVA
+
+A continuación vamos a realizar un segundo anova entre los puntos anotados por cada equipo.
+
+```{r}
+sola_aov=aov(X~F)
+summary(sola_aov)
+```
+
+De nuevo obtenemos un p-valor muy muy grande, y llegamos a la misma conclusión que en el primer anova; la media de puntos entre los cuatro equipos es distinta.
+
+## Comparación de medias dos a dos con ajuste de Bonferrori
+
+```{r}
+pairwise.t.test(X,F,p.adjust.method = "bonferroni")
+cluster4=kmeans(data4[,2:4],centers = 4)
+table(cluster4$cluster,F)
+plot(data2[,2:4],col=cluster4$cluster)
+```
+
+
+
+
+
+## Clustering
+
+```{r}
+X1=data$`Canastas intentadas`
+X2=data$`3P intentados`
+X3=data$`Tiros libres intentados`
+Datos=data.frame(X1,X2,X3)
+
+kmeans(X1,4,algorithm = "Lloyd",iter.max = 40)
+km=kmeans(X1,4,algorithm = "Lloyd",iter.max = 40)
+km$cluster
+boxplot(km$cluster,col="lightcoral")
+
+kmeans(X2,4,algorithm = "Lloyd",iter.max = 40)
+km1=kmeans(X2,4,algorithm = "Lloyd",iter.max = 40)
+km1$cluster
+boxplot(km1$cluster,col="maroon")
+
+kmeans(X3,4,algorithm = "Lloyd",iter.max = 40)
+km2=kmeans(X3,4,algorithm = "Lloyd",iter.max = 40)
+boxplot(km2$cluster,col="lightsalmon")
+km2$cluster
+
+kmeans(Datos,4,algorithm = "Lloyd",iter.max = 40)
+km3=kmeans(Datos,4,algorithm = "Lloyd",iter.max = 40)
+km3$cluster
+boxplot(km3$cluster,col="plum2")
+
+plot(Datos,col=km3$cluster,pch=19)
+```
+
+
+# Conclusiones:
+
+En el transcurso de la realización de este trabajo se han llevado a cabo varios estudios estadísticos muy interesantes, aprovechando que en el mundo NBA se pueden hacer gran cantidad de análisis y comparaciones. 
+Aprovechando esto, hemos cotejado a los mejores jugadores de la liga, ver en qué aspecto destacaban cada uno de ellos, comprobando así que tanto los altos como los bajos pueden destacar, aunque de forma totalmente distinta. También hemos explorado los datos de los equipos de la liga, analizando cuáles de ellos podían ser serios candidatos al anillo, y por contra, cuáles eran los que necesitaban un cambio de dinámica. Hemos analizado estadísticas cruciales como la altura y las hemos relacionado con otras como el triple, los tiros libres anotados, los robos, etc. También hemos hecho una parte de estadísticas de inferencia a los datos. Así que con los últimos temas dados en el temario, decidimos realizar varios test ANOVA, un test de Kolmogorov-Smirnov, una comparación de medias dos a dos con ajuste de Bonferrori y un Cluestering.
+
+Podemos decir que gracias a este proyecto hemos aprendido mucho sobre las herramientas de R, pues hemos podido averiguar de primera mano cómo se hacen los análisis estadísticos, aplicando las ténicas y conceptos dados en clase. Este trabajo nos ha ayudado a comprender mejor la asignatura en general. 
+
+En nuestra opinión, R es una herramienta muy útil con un gran abanico de posibilidades; hemos podido personalizar a nuestro antojo la gran cantidad de funcionalidades que se nos ofrecían ya que cuentan con un número muy extenso de variables con las cuales ir jugando. También hemos podido realizar facilmente operaciones que a mano hubiesen sido de lo más tediosas. Por último, cabe mencionar que a pesar de las circunstancias, hemos podido interactuar más con nuestro profesor, el cuál ha supuesto una gran ayuda a la hora de realizar el proyecto.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
